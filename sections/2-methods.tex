@@ -1,2 +1,26 @@
 \section{Methods}
 \label{sec:methods}
+\subsection{Guide Tree}
+To create our Multiple Sequence Alignment (MSA), we performed multiple pairwise alignments, combining each one iteratively to build a cohesive MSA. This process was guided by a tree structure generated from a previous algorithm, CHESS, which uses Entropy-Scaling Search [3]. The guide tree applied the Levenshtein distance metric to cluster similar sequences closely together, optimizing the alignment order by aligning the most similar sequences first. This approach strengthened the final MSA by helping the algorithm determine the optimal sequence pairings and alignment order, ultimately enhancing the accuracy and consistency of the alignment.
+\subsection{Clustering}
+It uses a clustering approach to make the task of calculating a large MSA into smaller easier tasks to complete. This approach allows our MSA to be efficient without sacrificing a significant amount of quality from the MSA. Our clustering approach is a hierarchal approach, used previously for CHESS [3]. After defining these clusters, we can examine each cluster individually. As discussed in CHESS, each cluster contains a center data point as well as serval other data points at a relatively close distance to the center. The center of each cluster is chosen as the point that has the lowest average distance between the rest of the points within the cluster as this results in better pairwise alignments. For this specific implementation, the distance of the points are based on the Needleman-Wunsch sequence alignment algorithm. [4]. Once all the clusters and the centers are defined, the algorithm begins completing pairwise alignments. This algorithm starts by examining each cluster separately. For each cluster, it uses the center to align all the other sequences. Therefore, for a cluster of size N, there will be N - 1 pairwise alignments and N - 1 different alignments of the center. With these pairwise alignments, our algorithm can go into the next section that discusses the method we use to merge all these pairwise alignments into one MSA.
+\subsection{Merging}
+Within this approach, there is two stages of the merging process that allows us to convert the large amount of pairwise sequence alignments to one, large multiple sequence alignment. This approach allows us to use information from all the pairwise alignments completed in the previous steps that we have discussed above. The first stage of this process focuses on creating very small MSAs out of the individual clusters that the dataset was divided into. The second stage uses the centers to As explained earlier, each cluster has a center that had been aligned separately with the rest of the points in the cluster. As a result of this, there is N - 1 different versions of an aligned version of the center. We use these versions to create one center that aligns with all the non-center sequences. \\
+\\We merge all the centers together by taking one center sequence and adding all the gaps of the different versions to one center. We start with just the first pairwise alignment and add it to the empty aligned cluster. Next, we examine the next pairwise alignment. This alignment will share the same center but will have a different non-center sequence. Because of this, it is very likely that the two versions of the aligned center will have gaps in different positions. The goal is to have one version of the center that aligns to all of the other sequences. To ensure that we have a center that aligns to the two other sequences we are considering, we must look at the differences between the two versions of the center. When we see a difference between the two centers, it will either be because of a gap was inserted in the first version or second of the center. To get the centers to match, we must insert a gap in the correct position to both the center missing the gap and its corresponding non-center sequence. After going through all the gaps in both versions of the center using this method, there will be one common center that aligns to both non-center sequences. This method can be repeated to add the rest of the non-center sequences and to create one fully aligned cluster. This merging starts at each of the bottom-most edges of the cluster tree and works its way up to the root, resulting in all the sequences within the data set to be aligned to each other.
+\vspace{0.5cm} 
+\begin{algorithm}[H]
+\caption{Merge Gaps}
+\begin{algorithmic}
+\FOR{$gap$ in $pairwise\_center$ or $cluster\_center$}
+    \IF{$gap$ in $pairwise\_center$ and $gap$ not in $cluster\_center$}
+        \FOR{$sequence$ in $cluster$}
+            \STATE $sequence$ = $sequence$.insert($gap$, $position$)
+        \ENDFOR
+    \ELSIF{$gap$ not in $pairwise\_center$ and $gap$ in $cluster\_center$}
+        \STATE $pairwise\_center$ = $pairwise\_center$.insert($gap$, $position$)
+        \STATE $pairwise\_seq$ = $pairwise\_seq$.insert($gap$, $position$)
+    \ENDIF
+\ENDFOR
+\STATE \RETURN $clusters$
+\end{algorithmic}
+\end{algorithm}
