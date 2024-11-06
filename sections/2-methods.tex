@@ -7,20 +7,22 @@ It uses a clustering approach to make the task of calculating a large MSA into s
 \subsection{Merging}
 Within this approach, there is two stages of the merging process that allows us to convert the large amount of pairwise sequence alignments to one, large multiple sequence alignment. This approach allows us to use information from all the pairwise alignments completed in the previous steps that we have discussed above. The first stage of this process focuses on creating very small MSAs out of the individual clusters that the dataset was divided into. The second stage uses the centers to As explained earlier, each cluster has a center that had been aligned separately with the rest of the points in the cluster. As a result of this, there is N - 1 different versions of an aligned version of the center. We use these versions to create one center that aligns with all the non-center sequences. \\
 \\We merge all the centers together by taking one center sequence and adding all the gaps of the different versions to one center. We start with just the first pairwise alignment and add it to the empty aligned cluster. Next, we examine the next pairwise alignment. This alignment will share the same center but will have a different non-center sequence. Because of this, it is very likely that the two versions of the aligned center will have gaps in different positions. The goal is to have one version of the center that aligns to all of the other sequences. To ensure that we have a center that aligns to the two other sequences we are considering, we must look at the differences between the two versions of the center. When we see a difference between the two centers, it will either be because of a gap was inserted in the first version or second of the center. To get the centers to match, we must insert a gap in the correct position to both the center missing the gap and its corresponding non-center sequence. After going through all the gaps in both versions of the center using this method, there will be one common center that aligns to both non-center sequences. This method can be repeated to add the rest of the non-center sequences and to create one fully aligned cluster. This merging starts at each of the bottom-most edges of the cluster tree and works its way up to the root, resulting in all the sequences within the data set to be aligned to each other.
+
 \vspace{0.5cm} 
+
 \begin{algorithm}[H]
 \caption{Merge Gaps}
-\begin{algorithmic}
-\FOR{$gap$ in $pairwise\_center$ or $cluster\_center$}
-    \IF{$gap$ in $pairwise\_center$ and $gap$ not in $cluster\_center$}
-        \FOR{$sequence$ in $cluster$}
-            \STATE $sequence$ = $sequence$.insert($gap$, $position$)
-        \ENDFOR
-    \ELSIF{$gap$ not in $pairwise\_center$ and $gap$ in $cluster\_center$}
-        \STATE $pairwise\_center$ = $pairwise\_center$.insert($gap$, $position$)
-        \STATE $pairwise\_seq$ = $pairwise\_seq$.insert($gap$, $position$)
-    \ENDIF
-\ENDFOR
-\STATE \RETURN $clusters$
+\begin{algorithmic}[1]
+\For{$gap$ \textbf{in} $pairwise\_center$ \textbf{or} $cluster\_center$}
+    \If{$gap$ \textbf{in} $pairwise\_center$ \textbf{and} $gap$ \textbf{not in} $cluster\_center$}
+        \For{$sequence$ \textbf{in} $cluster$}
+            \State Insert $gap$ into $sequence$ at $position$
+        \EndFor
+    \ElsIf{$gap$ \textbf{not in} $pairwise\_center$ \textbf{and} $gap$ \textbf{in} $cluster\_center$}
+        \State Insert $gap$ into $pairwise\_center$ at $position$
+        \State Insert $gap$ into $pairwise\_seq$ at $position$
+    \EndIf
+\EndFor
+\State \textbf{Return} $clusters$
 \end{algorithmic}
 \end{algorithm}
