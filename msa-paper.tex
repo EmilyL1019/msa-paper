@@ -1,5 +1,6 @@
 \documentclass{article}
 \pdfoutput=1
+\usepackage{arxiv}
 %%
 %% \BibTeX command to typeset BibTeX logo in the docs
 \AtBeginDocument{%
@@ -9,8 +10,8 @@
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithm}
-\usepackage{algpseudocode}
-% \usepackage{algpseudocodex}
+\usepackage{algorithmicx} % for modern algorithmic environments
+\usepackage{algpseudocode} % for high-level pseudocode commands
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
@@ -18,12 +19,18 @@
 \usepackage{multirow}
 \newcommand{\rulesep}{\unskip\ \vrule\ }
 
+
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
 \begin{document}
 
 \title{Title for MSA paper}
+
+
 
 \author{
     Emily Light \\
@@ -48,7 +55,7 @@
 \maketitle
 
 \begin{abstract}
-        The multiple sequence alignment problem has been investigated and many approaches have been developed over recent years. With the explosion of Big Data, the demand for fast and accurate multiple sequence approaches has drastically increased. Tandy Warnow's Pasta approach [1] served as a baseline for many more recent approaches. In addition to the other approaches, Pasta served as our reference point for the approach we developed using the previous work of CLAM. Our approach uses hierarchical clustering to form a guide tree that allows us to form a multiple sequence alignment using a bottom-up approach. \textbf{add sentences about results}
+    The multiple sequence alignment problem has been investigated and many approaches have been developed over recent years. With the explosion of Big Data, the demand for fast and accurate multiple sequence approaches has drastically increased. Tandy Warnow's Pasta approach [1] served as a baseline for many more recent approaches. In addition to the other approaches, Pasta served as our reference point for the approach we developed using the previous work of CLAM. Our approach uses hierarchical clustering to form a guide tree that allows us to form a multiple sequence alignment using a bottom-up approach. \textbf{add sentences about results}
 \end{abstract}
 
 \input{sections/1-introduction.tex}
